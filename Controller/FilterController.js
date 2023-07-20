@@ -32,14 +32,14 @@ export const invertFilterController = (req, res) => {
 };
 export const bwFilterController = (req, res) => {
 const buffer = req.file.buffer;
-
+const threshold = parseInt(req.params.threshold, 10) || 128;
 sharp(buffer)
-  .toColorspace('b-w')
-  .toBuffer()
-  .then((bwBuffer) => {
-    res.setHeader('Content-Type', 'image/png');
-    res.send(bwBuffer);
-  })
+    .threshold(threshold) // Set the threshold value (adjust as needed)
+    .toBuffer()
+    .then((bwBuffer) => {
+      res.setHeader('Content-Type', 'image/jpeg'); // Set the content type to JPEG
+      res.send(bwBuffer);
+    })
   .catch((err) => {
     console.error(err);
     res.status(500).json({ error: 'An error occurred while processing the image.' });
@@ -107,6 +107,7 @@ export const converterController = async (req, res) => {
     res.status(500).json({ error: 'An error occurred while converting the image.' });
   }
 };
+
 
 
 
